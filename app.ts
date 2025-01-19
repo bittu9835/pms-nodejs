@@ -1,15 +1,16 @@
 import express from 'express';
 import cors from 'cors';
+import {ENV} from './dotenv';
+import API from './API';
 
 
 const app = express();
 app.use(cors({origin:"*"}));
 app.use(express.json());
+app.use('/api', API);
 
-app.get('/', (req, res) => {
-    res.send('Hello World');
-});
+import('./DB/DBconnection');
 
-app.listen(4000, () => {
-    console.log('Server is running on port 4000');
+app.listen(ENV.APP_PORT, () => {
+    console.log(`Server is running on port ${ENV.APP_PORT}`);
 });
