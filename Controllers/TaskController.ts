@@ -2,44 +2,50 @@ import { TaskModel } from "../Models";
 
 
 export default {
-    createTask: async (req:any, res:any)=>{
+    createTask: async (req: any, res: any) => {
         try {
             const task = await TaskModel.create(req.body);
             res.status(200).json(task);
         } catch (error) {
-            res.status(500).json({message: (error as any).message});
+            res.status(500).json({ message: (error as any).message });
         }
     },
-    getTasks: async (req:any, res:any)=>{
+    getTasks: async (req: any, res: any) => {
         try {
             const tasks = await TaskModel.find();
             res.status(200).json(tasks);
         } catch (error) {
-            res.status(500).json({message: (error as any).message});
+            res.status(500).json({ message: (error as any).message });
         }
     },
-    getTask: async (req:any, res:any)=>{
+    getTask: async (req: any, res: any) => {
         try {
             const task = await TaskModel.findById(req.params.id);
             res.status(200).json(task);
         } catch (error) {
-            res.status(500).json({message: (error as any).message});
+            res.status(500).json({ message: (error as any).message });
         }
     },
-    updateTask: async (req:any, res:any)=>{
+    updateTask: async (req: any, res: any) => {
         try {
             const task = await TaskModel.findByIdAndUpdate(req.params.id,);
             res.status(200).json(task);
         } catch (error) {
-            res.status(500).json({message: (error as any).message});
+            res.status(500).json({ message: (error as any).message });
         }
     },
-    updateTaskProgress: async (req:any, res:any)=>{
+    updateTaskProgress: async (req: any, res: any) => {
         try {
-            const task = await TaskModel.findByIdAndUpdate(req.params.id, {progress: req.body.progress});
+            if (!req.body.progress) {
+                return res.status(400).json({ message: 'Progress field is required' });
+            }
+            if (!req.params.id) {
+                return res.status(400).json({ message: 'Task ID is required' });
+            }
+            const task = await TaskModel.findByIdAndUpdate(req.params.id, { progress: req.body.progress });
             res.status(200).json(task);
         } catch (error) {
-            res.status(500).json({message: (error as any).message});
+            res.status(500).json({ message: (error as any).message });
         }
     }
 }
