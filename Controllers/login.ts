@@ -1,6 +1,9 @@
 import { UserModel } from "../Models/index";
 import bcrypt from 'bcrypt'
 import { generateToken } from "../JWT";
+import ServerResponseHandler from "../ServerResponce/ServerResponse";
+
+const response = new ServerResponseHandler();
 
 
 
@@ -21,7 +24,7 @@ export default {
                         { _id: user._id },
                         { _id: 1, name: 1, email: 1}
                     )
-                    res.status(200).json({token: token, user: userDetail});
+                    response.handleSuccess(res, {token: token, user: userDetail}, 'Login successful');
                 }
             }
         } catch (error) {

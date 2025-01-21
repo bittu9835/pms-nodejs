@@ -38,7 +38,6 @@ export default (connection: any) => {
         },
         createsAt: {
             type: Date,
-            default: Date.now,
             required: false 
         },
         modifiedBy: {
@@ -48,7 +47,6 @@ export default (connection: any) => {
         },
         modifiedAt: {
             type: Date,
-            default: Date.now,
             required: false
         },
         project: {
