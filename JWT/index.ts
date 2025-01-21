@@ -34,7 +34,6 @@ const generateToken = (user: User): string => {
 // Verify a JWT token or Google ID token
 const verifyToken = async (req: any, res: Response, next: NextFunction): Promise<void> => {
     const token = req.header('token');
-
     if (!token) {
         res.status(401).json({ message: 'Access denied. Token is missing.' });
         return console.log('Access denied. Token is missing.');

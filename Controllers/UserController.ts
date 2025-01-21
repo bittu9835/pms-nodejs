@@ -1,5 +1,8 @@
 import { UserModel } from "../Models/index";
 import bcrypt from 'bcrypt'
+import ServerResponseHandler from '../ServerResponce/ServerResponse'
+
+const response = new ServerResponseHandler();
 
 export default {
     createUser: async (req: any, res: any) => {
@@ -7,30 +10,24 @@ export default {
             const { name, email, password } = req.body;
             const user = await UserModel.findOne({ email });
             if (user) {
-                return res.status(400).json({ message: "User already exists" });
+                response.badRequest(res, 'User already exists');
             } else {
                 const hashedPassword = await bcrypt.hash(password, 10);
                 const newUser = await UserModel.create({ name, email, password: hashedPassword });
-                res?.status(200).json({
-                    message: 'Request Successful',
-                    data: newUser
-                });
+                response.handleSuccess(res, newUser, 'User created successfully');
             }
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
-            res.status(500).send({ message: "Internal Server Error" });
+            response.somethingWentWrong(res, error.message);
         }
     },
     getUser: async (req: any, res: any) => {
         try {
             const users = await UserModel.find();
-            res?.status(200).json({
-                message: 'Request Successful',
-                data: users
-            });
-        } catch (error) {
+            response.handleSuccess(res, users);
+        } catch (error:any) {
             console.log(error);
-            res.status(500).send({ message: "Internal Server Error" });
+            response.somethingWentWrong(res, error.message);
         }
     }
 }

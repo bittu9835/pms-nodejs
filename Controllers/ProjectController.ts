@@ -1,5 +1,7 @@
-
+import ServerResponseHandler from '../ServerResponce/ServerResponse'
 import {ProjectModel} from '../Models/index'
+
+const response = new ServerResponseHandler();
 
 export default {
     createProject: async (req: any, res: any) => {
@@ -8,16 +10,13 @@ export default {
             const project = await ProjectModel
                 .findOne({ name });
             if (project) {
-                return res.status(400).json({ message: "Project already exists" });
+                response.badRequest(res, 'Project already exists');
             }
             const newProject = await ProjectModel.create(req.body);
-            res?.status(200).json({
-                message: 'Request Successful',
-                data: newProject
-            });
-        } catch (error) {
+            response.handleSuccess(res, newProject, 'Project created successfully');
+        } catch (error:any) {
             console.log(error);
-            res.status(500).send({ message: "Internal Server Error" });
+            response.somethingWentWrong(res, error.message);
         }
     },
     getProject: async (req: any, res: any) => {
@@ -27,9 +26,9 @@ export default {
                 message: 'Request Successful',
                 data: projects
             });
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
-            res.status(500).send({ message: "Internal Server Error" });
+            response.somethingWentWrong(res, error.message);
         }
     }
 }
